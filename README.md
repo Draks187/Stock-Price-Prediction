@@ -328,7 +328,7 @@ tesla-stock-prediction/
 ├── 📓 Tesla_Stock_Prediction.ipynb   ← Main notebook
 ├── 📊 Tesla.csv                      ← Raw dataset
 ├── 📄 README.md                      ← You are here
-└── 📋 requirements.txt               ← Dependencies
+
 ```
 
 ---
