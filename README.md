@@ -30,7 +30,6 @@
 - [Overview](#-overview)
 - [Dataset](#-dataset)
 - [Exploratory Data Analysis](#-exploratory-data-analysis)
-- [Feature Engineering](#-feature-engineering)
 - [Model Pipeline](#-model-pipeline)
 - [Results](#-results)
 - [Key Findings](#-key-findings)
