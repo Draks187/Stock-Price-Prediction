@@ -25,7 +25,7 @@
 
 ---
 
-## 📌 Table of Contents
+## Table of Contents
 
 - [Overview](#-overview)
 - [Dataset](#-dataset)
@@ -41,7 +41,7 @@
 
 ---
 
-## 🔍 Overview
+## Overview
 
 This project builds a **binary classification model** to predict the **next-day price direction** of Tesla (TSLA) stock.
 
@@ -54,7 +54,7 @@ Three models are trained and compared — **Logistic Regression**, **SVM (polyno
 
 ---
 
-## 📦 Dataset
+## Dataset
 
 | Property | Value |
 |----------|-------|
@@ -111,7 +111,7 @@ Tesla's close price shows a **strong upward trend** from ~$15 in 2010 to a peak 
 
 ---
 
-### 📅 Yearly Mean Close Price
+### Yearly Mean Close Price
 
 | Year | Mean Close | Trend |
 |------|-----------|-------|
@@ -136,7 +136,7 @@ Tesla's close price shows a **strong upward trend** from ~$15 in 2010 to a peak 
 
 ---
 
-### 🎯 Target Variable Distribution
+### Target Variable Distribution
 
 ```
           ╭──────────────────────╮
@@ -150,7 +150,7 @@ Tesla's close price shows a **strong upward trend** from ~$15 in 2010 to a peak 
 
 ---
 
-### 🔥 Feature Correlation (> 0.9)
+### Feature Correlation (> 0.9)
 
 ```
          Open  High  Low  Close  Volume
@@ -165,7 +165,7 @@ Vol   [  0.02  0.02  0.02  0.02   1.00 ]
 
 ---
 
-## ⚙️ Feature Engineering
+## Feature Engineering
 
 | Feature | Formula | Intuition |
 |---------|---------|-----------|
@@ -182,7 +182,7 @@ df['target'] = np.where(df['Close'].shift(-1) > df['Close'], 1, 0)
 
 ---
 
-## 🔄 Model Pipeline
+## Model Pipeline
 
 ```
  ┌─────────────────────────────────────────────────────┐
@@ -227,7 +227,7 @@ df['target'] = np.where(df['Close'].shift(-1) > df['Close'], 1, 0)
 
 ---
 
-## 📈 Results
+## Results
 
 ### ROC-AUC Scores
 
@@ -251,7 +251,7 @@ XGBoost       │█████████░│ 0.964    │███░░�
 
 ---
 
-## 💡 Key Findings
+## Key Findings
 
 > ### 1. 🟢 Logistic Regression — Best Baseline
 > Closest train/val AUC gap (0.025). With limited engineered features, it generalises most reliably. A strong, interpretable baseline.
@@ -267,7 +267,7 @@ XGBoost       │█████████░│ 0.964    │███░░�
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 <div align="center">
 
@@ -285,7 +285,7 @@ XGBoost       │█████████░│ 0.964    │███░░�
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 ### Prerequisites
 - Python 3.8+
@@ -320,7 +320,7 @@ drive.mount('/content/drive')
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 tesla-stock-prediction/
@@ -333,7 +333,7 @@ tesla-stock-prediction/
 
 ---
 
-## 🔮 Future Work
+## Future Work
 
 - [ ] 📐 Add technical indicators — RSI, MACD, Bollinger Bands, EMA
 - [ ] ⏮️ Include lagged features — yesterday's return, 5-day momentum
@@ -345,7 +345,7 @@ tesla-stock-prediction/
 
 ---
 
-## 📜 License
+## License
 
 ```
 MIT License — feel free to use, modify, and distribute with attribution.
