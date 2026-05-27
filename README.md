@@ -8,8 +8,7 @@
 <img src="https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white"/>
 <img src="https://img.shields.io/badge/Status-Complete-22C55E?style=for-the-badge"/>
 
-<br/>
-<br/>
+<br/><br/>
 
 > **Can machine learning predict whether Tesla's stock will rise or fall tomorrow?**
 > This project explores that question using 1,692 days of OHLCV data, feature engineering, and three classification models evaluated with ROC-AUC scoring.
@@ -91,77 +90,62 @@ Three models are trained and compared — **Logistic Regression**, **SVM (polyno
 
 ## 📊 Exploratory Data Analysis
 
-### 📈 Tesla Close Price — Historical Trend
+### Tesla Close Price — Historical Trend
 
-```
-$290 ┤                                                        ╭─╮
-$260 ┤                                                    ╭───╯ │
-$230 ┤                                              ╭─────╯     │
-$200 ┤                                         ╭────╯           │
-$170 ┤                                    ╭────╯               ╰─
-$140 ┤                               ╭────╯
-$110 ┤                          ╭────╯
- $80 ┤                    ╭─────╯
- $50 ┤              ╭─────╯
- $20 ┤──────────────╯
-      2010         2012         2014         2016
-```
+![Close Price](images/01_close_price.png)
 
 Tesla's close price shows a **strong upward trend** from ~$15 in 2010 to a peak of ~$286, with significant volatility in later years.
 
 ---
 
-### Yearly Mean Close Price
+### Feature Distributions
 
-| Year | Mean Close | Trend |
-|------|-----------|-------|
-| 2010 | ~$18 | 🔵 Base |
-| 2011 | ~$28 | 📈 +56% |
-| 2012 | ~$32 | 📈 +14% |
-| 2013 | ~$75 | 🚀 +134% |
-| 2014 | ~$201 | 🚀 +168% |
-| 2015 | ~$230 | 📈 +14% |
-| 2016 | ~$195 | 📉 -15% |
+![Distributions](images/02_distributions.png)
+
+Price features (Open, High, Low, Close) are **right-skewed**, reflecting Tesla's exponential growth phase. Volume is heavily skewed with occasional extreme spikes on high-activity trading days.
 
 ---
 
-### 🗓️ Quarter-End Effect
+### Outlier Detection — Box Plots
+
+![Box Plots](images/03_boxplots.png)
+
+Price columns show clean distributions with few outliers. Volume has significant upper outliers corresponding to major news events and earnings releases.
+
+---
+
+### Yearly Mean Prices
+
+![Yearly Mean](images/04_yearly_mean.png)
+
+All four price metrics (Open, High, Low, Close) follow the same yearly trend — confirming their high correlation and justifying the use of spread-based engineered features instead.
+
+---
+
+### Quarter-End Effect
 
 | Quarter-End | Mean Open | Mean Close | Mean Volume |
-|-------------|-----------|-----------|-------------|
+|-------------|-----------|------------|-------------|
 | ❌ No (0) | $130.81 | $130.80 | 4,461,581 |
 | ✅ Yes (1) | $135.68 | $135.67 | 3,891,084 |
 
-> Quarter-end months show a **slightly higher mean close price** (~$5 higher) but lower volume — a mild seasonal pattern worth capturing.
+> Quarter-end months show a **slightly higher mean close price** (~$5 higher) but lower volume — a mild seasonal pattern worth capturing as a feature.
 
 ---
 
 ### Target Variable Distribution
 
-```
-          ╭──────────────────────╮
-  RISE(1) │████████████  51.8%   │
-          ├──────────────────────┤
-  FALL(0) │███████████   48.2%   │
-          ╰──────────────────────╯
-```
+![Target Distribution](images/05_target_distribution.png)
 
-✅ **Well-balanced classes** — no oversampling or undersampling required.
+✅ **Well-balanced classes** (~51.8% rise vs ~48.2% fall) — no oversampling or undersampling required.
 
 ---
 
-### Feature Correlation (> 0.9)
+### Feature Correlation Heatmap
 
-```
-         Open  High  Low  Close  Volume
-Open  [  1.00  0.99  0.99  0.99   0.02 ]  ← highly correlated
-High  [  0.99  1.00  0.99  0.99   0.02 ]
-Low   [  0.99  0.99  1.00  0.99   0.02 ]
-Close [  0.99  0.99  0.99  1.00   0.02 ]
-Vol   [  0.02  0.02  0.02  0.02   1.00 ]
-```
+![Correlation Heatmap](images/06_correlation_heatmap.png)
 
-> `Open`, `High`, `Low`, and `Close` are all **>0.99 correlated** with each other. Using them directly as features would cause multicollinearity. Instead, we engineer spread-based features.
+`Open`, `High`, `Low`, and `Close` are all **>0.99 correlated** with each other. Using them directly as model inputs would cause multicollinearity. Instead, spread-based engineered features are used.
 
 ---
 
@@ -237,33 +221,33 @@ df['target'] = np.where(df['Close'].shift(-1) > df['Close'], 1, 0)
 | ❌ SVM (poly kernel) | 0.472 | 0.448 | 0.024 | Underperforms |
 | ⚠️ XGBoost | **0.964** | 0.573 | 0.391 | Severe overfitting |
 
-### Visual Comparison
+### Model Comparison Chart
 
-```
-Model               Train AUC                    Val AUC
-─────────────────────────────────────────────────────────
-Logistic Reg  │██░░░░░░░░│ 0.519    │███░░░░░░░│ 0.544
-SVM (poly)    │██░░░░░░░░│ 0.472    │██░░░░░░░░│ 0.448
-XGBoost       │█████████░│ 0.964    │███░░░░░░░│ 0.573
-              └──────────┘          └──────────┘
-               0.0      1.0          0.0      1.0
-```
+![Model Comparison](images/07_model_comparison.png)
+
+### ROC Curves
+
+![ROC Curves](images/09_roc_curves.png)
+
+### Confusion Matrix — Logistic Regression
+
+![Confusion Matrix](images/08_confusion_matrix.png)
 
 ---
 
 ## Key Findings
 
 > ### 1. 🟢 Logistic Regression — Best Baseline
-> Closest train/val AUC gap (0.025). With limited engineered features, it generalises most reliably. A strong, interpretable baseline.
+> Closest train/val AUC gap (0.025). With limited engineered features, it generalises most reliably and is the most interpretable model.
 
 > ### 2. 🔴 XGBoost — Overfitting Alert
 > Training AUC of **0.964** vs validation AUC of **0.573** — a gap of 0.391. The model memorises training data with only 3 input features. Requires regularisation or more features.
 
 > ### 3. 🟡 SVM — Not Suitable
-> Polynomial kernel fails to find a useful decision boundary even on training data. AUC below 0.5 indicates predictions worse than random on some splits.
+> Polynomial kernel fails to find a useful decision boundary even on training data. AUC below 0.5 on validation indicates predictions worse than random.
 
 > ### 4. 📉 Feature Limitation
-> Only 3 features were used as inputs. Stock price prediction inherently benefits from richer signals — technical indicators (RSI, MACD), volume trends, and lagged returns would meaningfully improve all models.
+> Only 3 features were used as inputs. Stock prediction benefits from richer signals — technical indicators (RSI, MACD), volume trends, and lagged returns would meaningfully improve all models.
 
 ---
 
@@ -299,7 +283,7 @@ cd tesla-stock-prediction
 
 ### Step 2 — Install dependencies
 ```bash
-pip install pandas numpy matplotlib seaborn scikit-learn xgboost jupyter
+pip install -r requirements.txt
 ```
 
 ### Step 3 — Add the dataset
@@ -328,7 +312,16 @@ tesla-stock-prediction/
 ├── 📓 Tesla_Stock_Prediction.ipynb   ← Main notebook
 ├── 📊 Tesla.csv                      ← Raw dataset
 ├── 📄 README.md                      ← You are here
-
+└── 📁 images/
+    ├── 01_close_price.png
+    ├── 02_distributions.png
+    ├── 03_boxplots.png
+    ├── 04_yearly_mean.png
+    ├── 05_target_distribution.png
+    ├── 06_correlation_heatmap.png
+    ├── 07_model_comparison.png
+    ├── 08_confusion_matrix.png
+    └── 09_roc_curves.png
 ```
 
 ---
